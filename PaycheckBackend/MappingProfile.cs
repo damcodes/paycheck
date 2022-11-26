@@ -10,6 +10,11 @@ namespace PaycheckBackend
 		public MappingProfile()
 		{
 			CreateMap<User, UserDto>();
+			CreateMap<Paycheck, PaycheckDto>();
+			CreateMap<Job, JobDto>();
+			CreateMap<Workday, WorkdayDto>();
+			CreateMap<User, UserDtoWithJobs>();
+			CreateMap<UserDtoCreate, User>();
 		}
 	}
 }

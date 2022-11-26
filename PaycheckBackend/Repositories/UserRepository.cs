@@ -1,6 +1,7 @@
 using PaycheckBackend.Models;
 using PaycheckBackend.Repositories.Interfaces;
 using PaycheckBackend.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace PaycheckBackend.Repositories
 {
@@ -14,6 +15,23 @@ namespace PaycheckBackend.Repositories
             return FindAll()
                 .OrderBy(u => u.FirstName)
                 .ToList();
+        }
+
+        public User? GetUserById(int id)
+        {
+            return FindByCondition(u => u.UserId.Equals(id)).FirstOrDefault();
+        }
+
+        public User? GetUserByIdWithJobs(int id)
+        {
+            return FindByCondition(u => u.UserId.Equals(id))
+                .Include(j => j.Jobs)
+                .FirstOrDefault();
+        }
+
+        public void CreateUser(User user)
+        {
+            Create(user);
         }
     }
 }

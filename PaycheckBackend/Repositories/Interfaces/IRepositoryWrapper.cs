@@ -8,5 +8,6 @@ namespace PaycheckBackend.Repositories.Interfaces
         IJobRepository Job { get; }
         IPaycheckRepository Paycheck { get; }
         IWorkdayRepository Workday { get; }
+        void Save();
     }
 }

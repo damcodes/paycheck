@@ -3,6 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using PaycheckBackend.Repositories;
 using PaycheckBackend.Repositories.Interfaces;
+using PaycheckBackend.Logger;
 
 namespace PaycheckBackend.Extensions
 {
@@ -29,6 +30,11 @@ namespace PaycheckBackend.Extensions
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+        }
+
+        public static void ConfigureLoggerService(this IServiceCollection services)
+        {
+            services.AddSingleton<ILoggerManager, LoggerManager>();
         }
     }
 }
