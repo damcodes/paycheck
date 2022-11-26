@@ -25,7 +25,21 @@ namespace PaycheckBackend.Repositories
         public User? GetUserByIdWithJobs(int id)
         {
             return FindByCondition(u => u.UserId.Equals(id))
-                .Include(j => j.Jobs)
+                .Include(u => u.Jobs)
+                .FirstOrDefault();
+        }
+
+        public User? GetUserByIdWithPaychecks(int id)
+        {
+            return FindByCondition(u => u.UserId.Equals(id))
+                .Include(u => u.Paychecks)
+                .FirstOrDefault();
+        }
+
+        public User? GetUserByIdWithWorkdays(int id)
+        {
+            return FindByCondition(u => u.UserId.Equals(id))
+                .Include(u => u.Workdays)
                 .FirstOrDefault();
         }
 

@@ -90,6 +90,54 @@ namespace PaycheckBackend.Controllers
             }
         }
 
+        [HttpGet("{id}/paychecks")]
+        public IActionResult GetUserByIdWithPaychecks(int id)
+        {
+            try
+            {
+                var user = _repository.User.GetUserByIdWithPaychecks(id);
+
+                if (user == null)
+                {
+                    _logger.LogError("UserController", "GetUserByIdWithPaychecks", $"User with {{id: {id}}} not found");
+                    return NotFound();
+                }
+
+                _logger.LogInfo("UserController", "GetUserByIdWithPaychecks", $"User with {{id: {id}}} found with {user.Paychecks.Count()} paychecks");
+                var userResult = _mapper.Map<UserDtoWithPaychecks>(user);
+                return Ok(userResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UserController", "GetUserByIdWithPaychecks", $"Error occured--Message: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("{id}/workdays")]
+        public IActionResult GetUserByIdWithWorkdays(int id)
+        {
+            try
+            {
+                var user = _repository.User.GetUserByIdWithWorkdays(id);
+
+                if (user == null)
+                {
+                    _logger.LogError("UserController", "GetUserByIdWithWorkdays", $"User with {{id: {id}}} not found");
+                    return NotFound();
+                }
+
+                _logger.LogInfo("UserController", "GetUserByIdWithWorkdays", $"User with {{id: {id}}} found with {user.Workdays.Count()} workdays");
+                var userResult = _mapper.Map<UserDtoWithWorkdays>(user);
+                return Ok(userResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UserController", "GetUserByIdWithWorkdays", $"Error occured--Message: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPost]
         public IActionResult CreateUser([FromBody]UserDtoCreate user)
         {
