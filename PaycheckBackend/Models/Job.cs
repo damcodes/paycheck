@@ -16,5 +16,6 @@ namespace PaycheckBackend.Models
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }
         public User? User { get; set; }
+        public List<Paycheck>? Paychecks { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace PaycheckBackend.Models
         [Required]
         [ForeignKey(nameof(Job))]
         public int JobId { get; set; }
-        public Job? Job { get; set; }
+        public Job Job { get; set; }
     }
 }
