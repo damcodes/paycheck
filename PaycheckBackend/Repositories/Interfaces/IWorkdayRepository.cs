@@ -5,6 +5,6 @@ namespace PaycheckBackend.Repositories.Interfaces
     public interface IWorkdayRepository
     {
         Workday? GetWorkdayById(int id);
-        void CreateWorkday(Workday workday);
+        void CreateWorkday(Workday workday, Job job);
     }
 }

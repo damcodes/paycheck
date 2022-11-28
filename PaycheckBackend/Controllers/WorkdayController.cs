@@ -71,9 +71,9 @@ namespace PaycheckBackend.Controllers
                 Paycheck? paycheck = _repository.Paycheck.GetPaycheckById(workdayToCreate.PaycheckId);
                 Job? job = _repository.Job.GetJobById(workdayToCreate.JobId);
 
-                _repository.Workday.CreateWorkday(workdayToCreate);
+                _repository.Workday.CreateWorkday(workdayToCreate, job);
                 _logger.LogInfo("WorkdayController", "CreateWorkday", $"Updating paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
-                _repository.Paycheck.CalculateAndAdjustPaycheckAmount(workdayToCreate, paycheck, job);
+                _repository.Paycheck.CalculateAndAdjustPaycheckAmount(paycheck, workdayToCreate);
                 _repository.Save();
                  
                 var newWorkday = _mapper.Map<WorkdayDto>(workdayToCreate);

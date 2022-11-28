@@ -5,7 +5,9 @@ namespace PaycheckBackend.Repositories.Interfaces
     public interface IPaycheckRepository
     {
         Paycheck? GetPaycheckById(int id);
+        Paycheck? GetPaycheckByIdWithWorkdays(int id);
         void CreatePaycheck(Paycheck paycheck, Job job);
-        void CalculateAndAdjustPaycheckAmount(Workday workday, Paycheck paycheck, Job job);
+        void CalculateAndAdjustPaycheckAmount(Paycheck paycheck, Workday workday);
+        Paycheck RecalculatePaycheck(Paycheck paycheck);
     }
 }

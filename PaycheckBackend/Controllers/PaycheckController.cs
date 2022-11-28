@@ -51,6 +51,31 @@ namespace PaycheckBackend.Controllers
             }
         }
 
+        [HttpGet("{id}/workdays", Name = "GetPaycheckByIdWithWorkdays")]
+        public IActionResult GetPaycheckByIdWithWorkdays(int id)
+        {
+            try
+            {
+                var paycheck = _repository.Paycheck.GetPaycheckByIdWithWorkdays(id);
+
+                if (paycheck == null)
+                {
+                    _logger.LogError("PaycheckController", "GetPaycheckByIdWithWorkdays", $"Paycheck with {{id: {id} }} not found");
+                    return NotFound();
+                }
+
+                var paycheckResult = _mapper.Map<PaycheckDtoWithWorkdays>(paycheck);
+
+                _logger.LogInfo("PaycheckController", "GetPaycheckByIdWithWorkdays", $"Paycheck with {{id: {id}}} found with {paycheck.Workdays.Count()} workdays and returned");
+                return Ok(paycheckResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("PaycheckController", "GetPaycheckByIdWithWorkdays", $"Error occured--Message: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPost]
         public IActionResult CreatePaycheck([FromBody]PaycheckDtoCreate paycheck)
         {
@@ -81,6 +106,34 @@ namespace PaycheckBackend.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("PaycheckController", "CreatePaycheck", $"Error occured--Message: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("{id}/recalculate")]
+        public IActionResult RecalculatePaycheck(int id)
+        {
+            try
+            {
+                var paycheck = _repository.Paycheck.GetPaycheckByIdWithWorkdays(id);
+
+                if (paycheck == null)
+                {
+                    _logger.LogError("PaycheckController", "GetPaycheckById", $"Paycheck with {{id: {id} }} not found");
+                    return NotFound();
+                }
+
+                _logger.LogInfo("PaycheckController", "RecalculatePaycheck", $"Recalculating paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
+                Paycheck paycheckRecalc = _repository.Paycheck.RecalculatePaycheck(paycheck);
+                _repository.Save();
+                _logger.LogInfo("PaycheckController", "RecalculatePaycheck", $"Finished recalc paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
+
+                var paycheckResult = _mapper.Map<PaycheckDto>(paycheckRecalc);
+                return CreatedAtRoute("GetPaycheckById", new { id = paycheckResult.PaycheckId }, paycheckResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("PaycheckController", "RecalculatePaycheck", $"Error occurred--Message: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

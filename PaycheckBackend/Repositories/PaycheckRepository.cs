@@ -18,6 +18,14 @@ namespace PaycheckBackend.Repositories
                 .FirstOrDefault();
         }
 
+        public Paycheck? GetPaycheckByIdWithWorkdays(int id)
+        {
+            return FindByCondition(p => p.PaycheckId.Equals(id))
+                .Include(p => p.Job)
+                .Include(p => p.Workdays)
+                .FirstOrDefault();
+        }
+
         public void CreatePaycheck(Paycheck paycheck, Job job)
         {
             DateTime startDate = DateTime.SpecifyKind(paycheck.StartDate, DateTimeKind.Utc);
@@ -30,16 +38,22 @@ namespace PaycheckBackend.Repositories
             Create(paycheck);
         }
 
-        public void CalculateAndAdjustPaycheckAmount(Workday workday, Paycheck paycheck, Job job)
+        public void CalculateAndAdjustPaycheckAmount(Paycheck paycheck, Workday workday)
         {
-            double hoursWorked = (workday.TimeOut - workday.TimeIn).TotalHours;
-            double workdayWages = job.PayRate * hoursWorked;
-            if (workday.Tips != null && workday.Tips > 0)
-            {
-                workdayWages += (double)workday.Tips;
-            }
-            paycheck.Amount += workdayWages;
+            paycheck.Amount += workday.WagesEarned;
             Update(paycheck);
+        }
+
+        public Paycheck RecalculatePaycheck(Paycheck paycheck)
+        {
+            double newAmount = 0;
+            foreach (Workday w in paycheck.Workdays)
+            {
+                newAmount += w.WagesEarned;
+            }
+            paycheck.Amount = newAmount;
+            Update(paycheck);
+            return paycheck;
         }
     }
 }

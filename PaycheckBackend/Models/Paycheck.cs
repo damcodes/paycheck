@@ -19,5 +19,6 @@ namespace PaycheckBackend.Models
         [ForeignKey(nameof(Job))]
         public int JobId { get; set; }
         public Job Job { get; set; }
+        public List<Workday>? Workdays { get; set; }
     }
 }

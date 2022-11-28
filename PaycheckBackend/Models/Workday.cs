@@ -12,6 +12,8 @@ namespace PaycheckBackend.Models
         public DateTime TimeOut { get; set; }
         public double? Tips { get; set; }
         [Required]
+        public double WagesEarned { get; set; }
+        [Required]
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }
         public User? User { get; set; }

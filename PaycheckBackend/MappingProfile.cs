@@ -23,6 +23,7 @@ namespace PaycheckBackend
             //paycheck
             CreateMap<Paycheck, PaycheckDto>();
 			CreateMap<Paycheck, PaycheckDtoUserWithPaychecks>();
+			CreateMap<Paycheck, PaycheckDtoWithWorkdays>();
             CreateMap<PaycheckDtoCreate, Paycheck>();
 
             //workday
