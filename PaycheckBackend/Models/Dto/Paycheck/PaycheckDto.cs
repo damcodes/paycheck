@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace PaycheckBackend.Models.Dto
 {
 	public class PaycheckDto
@@ -6,6 +7,7 @@ namespace PaycheckBackend.Models.Dto
 		public int PaycheckId { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
+		public double Amount { get; set; }
 		public JobDto? Job { get; set; }
 	}
 }

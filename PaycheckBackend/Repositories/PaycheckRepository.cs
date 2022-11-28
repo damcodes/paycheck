@@ -2,6 +2,7 @@ using PaycheckBackend.Models;
 using PaycheckBackend.Repositories.Interfaces;
 using PaycheckBackend.Db;
 using Microsoft.EntityFrameworkCore;
+using PaycheckBackend.Logger;
 
 namespace PaycheckBackend.Repositories
 {
@@ -27,6 +28,18 @@ namespace PaycheckBackend.Repositories
             paycheck.EndDate = endDate;
 
             Create(paycheck);
+        }
+
+        public void CalculateAndAdjustPaycheckAmount(Workday workday, Paycheck paycheck, Job job)
+        {
+            double hoursWorked = (workday.TimeOut - workday.TimeIn).TotalHours;
+            double workdayWages = job.PayRate * hoursWorked;
+            if (workday.Tips != null && workday.Tips > 0)
+            {
+                workdayWages += (double)workday.Tips;
+            }
+            paycheck.Amount += workdayWages;
+            Update(paycheck);
         }
     }
 }

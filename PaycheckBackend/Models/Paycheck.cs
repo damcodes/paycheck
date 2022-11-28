@@ -10,6 +10,7 @@ namespace PaycheckBackend.Models
         public DateTime StartDate { get; set; }
         [Required]
         public DateTime EndDate { get; set; }
+        public double Amount { get; set; }
         [Required]
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }

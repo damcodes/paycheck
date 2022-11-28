@@ -17,16 +17,17 @@ namespace PaycheckBackend
             CreateMap<UserDtoCreate, User>();
 
             //job
-            CreateMap<JobDtoCreate, Job>();
             CreateMap<Job, JobDto>();
+            CreateMap<JobDtoCreate, Job>();
 
-			//paycheck
+            //paycheck
             CreateMap<Paycheck, PaycheckDto>();
 			CreateMap<Paycheck, PaycheckDtoUserWithPaychecks>();
             CreateMap<PaycheckDtoCreate, Paycheck>();
 
             //workday
             CreateMap<Workday, WorkdayDto>();
+			CreateMap<WorkdayDtoCreate, Workday>();
         }
 	}
 }
