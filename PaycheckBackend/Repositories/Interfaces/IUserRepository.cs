@@ -2,7 +2,7 @@ using PaycheckBackend.Models;
 
 namespace PaycheckBackend.Repositories.Interfaces
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IUserRepository 
     {
         IEnumerable<User> GetAllUsers();
         User? GetUserById(int id);

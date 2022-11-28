@@ -2,7 +2,7 @@ using PaycheckBackend.Models;
 
 namespace PaycheckBackend.Repositories.Interfaces
 {
-    public interface IPaycheckRepository : IBaseRepository<Paycheck>
+    public interface IPaycheckRepository
     {
         Paycheck? GetPaycheckById(int id);
         void CreatePaycheck(Paycheck paycheck, Job job);
