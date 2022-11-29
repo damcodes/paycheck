@@ -9,5 +9,6 @@ namespace PaycheckBackend.Repositories.Interfaces
         void CreatePaycheck(Paycheck paycheck, Job job);
         void CalculateAndAdjustPaycheckAmount(Paycheck paycheck, Workday workday);
         Paycheck RecalculatePaycheck(Paycheck paycheck);
+        Paycheck RecalculatePaycheck(Paycheck paycheck, List<Workday> workdays);
     }
 }

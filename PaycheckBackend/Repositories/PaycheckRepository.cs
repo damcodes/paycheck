@@ -51,6 +51,20 @@ namespace PaycheckBackend.Repositories
             {
                 newAmount += w.WagesEarned;
             }
+
+            paycheck.Amount = newAmount;
+            Update(paycheck);
+            return paycheck;
+        }
+
+        public Paycheck RecalculatePaycheck(Paycheck paycheck, List<Workday> workdays)
+        {
+            double newAmount = 0;
+            foreach (Workday w in workdays)
+            {
+                newAmount += w.WagesEarned;
+            }
+
             paycheck.Amount = newAmount;
             Update(paycheck);
             return paycheck;

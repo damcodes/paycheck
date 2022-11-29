@@ -124,6 +124,7 @@ namespace PaycheckBackend.Controllers
                 }
 
                 _logger.LogInfo("PaycheckController", "RecalculatePaycheck", $"Recalculating paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
+                _repository.Workday.RecalculateWagesEarned(paycheck.Workdays, paycheck.Job);
                 Paycheck paycheckRecalc = _repository.Paycheck.RecalculatePaycheck(paycheck);
                 _repository.Save();
                 _logger.LogInfo("PaycheckController", "RecalculatePaycheck", $"Finished recalc paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");

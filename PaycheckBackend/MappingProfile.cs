@@ -29,6 +29,7 @@ namespace PaycheckBackend
             //workday
             CreateMap<Workday, WorkdayDto>();
 			CreateMap<WorkdayDtoCreate, Workday>();
+			CreateMap<WorkdayDtoPatch, Workday>();
         }
 	}
 }

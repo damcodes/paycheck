@@ -75,7 +75,7 @@ namespace PaycheckBackend.Controllers
                 _logger.LogInfo("WorkdayController", "CreateWorkday", $"Updating paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
                 _repository.Paycheck.CalculateAndAdjustPaycheckAmount(paycheck, workdayToCreate);
                 _repository.Save();
-                 
+
                 var newWorkday = _mapper.Map<WorkdayDto>(workdayToCreate);
                 _logger.LogInfo("WorkdayController", "CreateWorkday", $"Finished updating paycheck amount {{ id: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
                 _logger.LogInfo("WorkdayController", "CreateWorkday", $"New workday created with {{ id: {newWorkday.WorkdayId} }} and paycheck amount adjusted");
@@ -84,6 +84,55 @@ namespace PaycheckBackend.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("WorkdayController", "CreateWorkday", $"Error occured--Message: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchWorkday(int id, [FromBody] WorkdayDtoPatch workday)
+        {
+            try
+            {
+                if (workday is null)
+                {
+                    _logger.LogError("WorkdayController", "PatchWorkday", "Workday object sent from client is null");
+                    return BadRequest("Workday object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("WorkdayController", "PatchWorkday", "Workday object sent from client is invalid");
+                    return BadRequest("Workday object is invalid");
+                }
+
+                var workdayToPatch = _repository.Workday.GetWorkdayById(id);
+                if (workdayToPatch is null)
+                {
+                    _logger.LogError("WorkdayController", "PatchWorkday", $"Workday with {{ id: {id} }} not found");
+                    return NotFound();
+                }
+
+                _mapper.Map(workday, workdayToPatch);
+                Job? job = _repository.Job.GetJobById(workdayToPatch.JobId);
+                _logger.LogInfo("WorkdayController", "PatchWorkday", $"Updating workday {{ id: {workdayToPatch.WorkdayId}, wagesEarned: {workdayToPatch.WagesEarned} }}");
+                _repository.Workday.PatchWorkday(workdayToPatch, job);
+                _repository.Save();
+
+                //recalculate paycheck
+                _logger.LogInfo("WorkdayController", "PatchWorkday", $"Finished updating workday {{ id: {workdayToPatch.WorkdayId}, wagesEarned: {workdayToPatch.WagesEarned} }}");
+                Paycheck? paycheckWithWorkdays = _repository.Paycheck.GetPaycheckByIdWithWorkdays(workdayToPatch.PaycheckId);
+                List<Workday> workdays = paycheckWithWorkdays.Workdays;
+                Paycheck? paycheck = _repository.Paycheck.GetPaycheckById(workdayToPatch.PaycheckId);
+                _logger.LogInfo("WorkdayController", "PatchWorkday", $"Recalculating paycheck this workday belongs to {{ paycheckId: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
+                paycheck = _repository.Paycheck.RecalculatePaycheck(paycheck, workdays);
+                _repository.Save();
+                _logger.LogInfo("WorkdayController", "PatchWorkday", $"Finished recalculating paycheck {{ paycheckId: {paycheck.PaycheckId}, amount: {paycheck.Amount} }}");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("WorkdayController", "PatchWorkday", $"Error occurred--Message: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

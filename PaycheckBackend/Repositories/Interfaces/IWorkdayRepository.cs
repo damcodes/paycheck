@@ -6,5 +6,8 @@ namespace PaycheckBackend.Repositories.Interfaces
     {
         Workday? GetWorkdayById(int id);
         void CreateWorkday(Workday workday, Job job);
+        void RecalculateWagesEarned(List<Workday> workdays, Job job);
+        void RecalculateWagesEarned(Workday workday, Job job);
+        void PatchWorkday(Workday workday, Job job);
     }
 }
