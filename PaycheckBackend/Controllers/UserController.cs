@@ -42,7 +42,7 @@ namespace PaycheckBackend.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "UserById")]
+        [HttpGet("{id}", Name = "GetUserById")]
         public IActionResult GetUserById(int id)
         {
             try
@@ -162,13 +162,53 @@ namespace PaycheckBackend.Controllers
 
                 var newUser = _mapper.Map<UserDto>(userToCreate);
                 _logger.LogInfo("UserController", "CreateUser", $"New user created {{email: {newUser.Email}, name: {newUser.FirstName + " " + newUser.LastName}}}");
-                return CreatedAtRoute("UserById", new { id = newUser.UserId }, newUser);
+                return CreatedAtRoute("GetUserById", new { id = newUser.UserId }, newUser);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError("UserController", "CreateUser", $"Error occured--Message: {ex.Message}");
                 return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchUser(int id, [FromBody]UserDtoPatch user)
+        {
+            try
+            {
+                if (user is null)
+                {
+                    _logger.LogError("UserController", "PatchUser", "User object sent from client is null");
+                    return BadRequest();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("UserController", "PatchUser", "User object sent from client is invalid");
+                    return BadRequest();
+                }
+
+                var userToPatch = _repository.User.GetUserById(id);
+                if (userToPatch is null)
+                {
+                    _logger.LogError("UserController", "PatchUser", $"User with {{ id: {id} }} not found");
+                    return NotFound();
+                }
+
+                _logger.LogInfo("UserController", "PatchUser", $"Updating user {{ id: {userToPatch.UserId}, name: {userToPatch.FirstName + " " + userToPatch.LastName}, email: {userToPatch.Email} }}");
+                _mapper.Map(user, userToPatch);
+                User userPatched = _repository.User.PatchUser(userToPatch);
+                _repository.Save();
+                _logger.LogInfo("UserController", "PatchUser", $"Updated user {{ id: {userToPatch.UserId}, name: {userToPatch.FirstName + " " + userToPatch.LastName}, email: {userToPatch.Email} }}");
+
+                var userResult = _mapper.Map<UserDto>(userPatched);
+                return Ok(userResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UserController", "PatchUser", $"Error occurred--Message: {ex.Message}");
+                return StatusCode(500, $"Internal server error");
             }
         }
     }

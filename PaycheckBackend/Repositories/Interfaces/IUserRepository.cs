@@ -10,5 +10,6 @@ namespace PaycheckBackend.Repositories.Interfaces
         User? GetUserByIdWithPaychecks(int id);
         User? GetUserByIdWithWorkdays(int id);
         void CreateUser(User user);
+        User PatchUser(User user);
     }
 }

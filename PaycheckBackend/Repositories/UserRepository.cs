@@ -47,5 +47,11 @@ namespace PaycheckBackend.Repositories
         {
             Create(user);
         }
+
+        public User PatchUser(User user)
+        {
+            Update(user);
+            return user;
+        }
     }
 }
