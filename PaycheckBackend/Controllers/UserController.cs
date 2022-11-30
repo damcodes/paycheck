@@ -5,23 +5,32 @@ using System;
 using AutoMapper;
 using PaycheckBackend.Models.Dto;
 using PaycheckBackend.Logger;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace PaycheckBackend.Controllers
 {
     [Route("api/user")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
 
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
         private ILoggerManager _logger;
+        private IConfiguration _config;
 
-        public UserController(IRepositoryWrapper repository, IMapper mapper, ILoggerManager logger)
+        public UserController(IRepositoryWrapper repository, IMapper mapper, ILoggerManager logger, IConfiguration config)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _config = config;
         }
 
         [HttpGet]
@@ -139,7 +148,7 @@ namespace PaycheckBackend.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody]UserDtoCreate user)
+        public IActionResult CreateUser([FromBody] UserDtoCreate user)
         {
             try
             {
@@ -168,6 +177,48 @@ namespace PaycheckBackend.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("UserController", "CreateUser", $"Error occured--Message: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public IActionResult Login([FromBody]UserDtoAuthenticate loginAttempt)
+        {
+            try
+            {
+                if (loginAttempt is null)
+                {
+
+                    return BadRequest("User object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+
+                }
+
+                User? userToAuthenticate = _repository.User.GetUserByEmail(loginAttempt.Email);
+                if (userToAuthenticate is null)
+                {
+                    _logger.LogError("UserController", "Authenticate", $"User with {{ email: {loginAttempt.Email} }} not found");
+                    return Unauthorized("Email address not found");
+                }
+                userToAuthenticate = Authenticate(userToAuthenticate, loginAttempt);
+                if (userToAuthenticate is null)
+                {
+                    _logger.LogError("UserController", "Authenticate", $"Incorrect password for User with {{ email: {loginAttempt.Email} }}");
+                    return Unauthorized("Incorrect password");
+                }
+
+                string token = BuildToken(userToAuthenticate);
+                UserDtoWithToken userWithToken = _mapper.Map<UserDtoWithToken>(userToAuthenticate);
+                userWithToken.Token = token;
+                return Ok(userWithToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UserController", "Authenticate", $"Error occurred--Message: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -210,6 +261,27 @@ namespace PaycheckBackend.Controllers
                 _logger.LogError("UserController", "PatchUser", $"Error occurred--Message: {ex.Message}");
                 return StatusCode(500, $"Internal server error");
             }
+        }
+
+        private string BuildToken(User user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+              _config["Jwt:Audience"],
+              expires: DateTime.Now.AddMinutes(60),
+              claims: new Claim[] { new Claim(ClaimTypes.Name, user.Password) },
+              signingCredentials: creds);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private User? Authenticate(User user, UserDtoAuthenticate login)
+        {
+            if (user is not null && user.Password == login.Password)
+            {
+                return user;
+            }
+            return null;
         }
     }
 }

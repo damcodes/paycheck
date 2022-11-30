@@ -1,4 +1,5 @@
 using PaycheckBackend.Models;
+using PaycheckBackend.Models.Dto;
 
 namespace PaycheckBackend.Repositories.Interfaces
 {
@@ -6,6 +7,7 @@ namespace PaycheckBackend.Repositories.Interfaces
     {
         IEnumerable<User> GetAllUsers();
         User? GetUserById(int id);
+        User? GetUserByEmail(string email);
         User? GetUserByIdWithJobs(int id);
         User? GetUserByIdWithPaychecks(int id);
         User? GetUserByIdWithWorkdays(int id);

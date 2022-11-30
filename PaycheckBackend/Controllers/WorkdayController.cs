@@ -8,11 +8,13 @@ using PaycheckBackend.Logger;
 using PaycheckBackend.Models;
 using PaycheckBackend.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PaycheckBackend.Controllers
 {
     [Route("api/workday")]
     [ApiController]
+    [Authorize]
     public class WorkdayController : ControllerBase
     {
         private IRepositoryWrapper _repository;

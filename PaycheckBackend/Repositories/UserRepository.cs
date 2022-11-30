@@ -1,4 +1,5 @@
 using PaycheckBackend.Models;
+using PaycheckBackend.Models.Dto;
 using PaycheckBackend.Repositories.Interfaces;
 using PaycheckBackend.Db;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,11 @@ namespace PaycheckBackend.Repositories
         public User? GetUserById(int id)
         {
             return FindByCondition(u => u.UserId.Equals(id)).FirstOrDefault();
+        }
+
+        public User? GetUserByEmail(string email)
+        {
+            return FindByCondition(u => u.Email.Equals(email)).FirstOrDefault();
         }
 
         public User? GetUserByIdWithJobs(int id)

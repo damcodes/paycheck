@@ -8,12 +8,14 @@ using PaycheckBackend.Models.Dto;
 using PaycheckBackend.Logger;
 using PaycheckBackend.Models;
 using PaycheckBackend.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace PaycheckBackend.Controllers
 {
     [Route("api/job")]
     [ApiController]
+    [Authorize]
     public class JobController : ControllerBase
     {
 

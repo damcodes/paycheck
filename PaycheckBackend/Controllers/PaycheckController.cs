@@ -8,11 +8,13 @@ using PaycheckBackend.Models.Dto;
 using PaycheckBackend.Logger;
 using PaycheckBackend.Models;
 using PaycheckBackend.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PaycheckBackend.Controllers
 {
     [Route("api/paycheck")]
     [ApiController]
+    [Authorize]
     public class PaycheckController : ControllerBase
     {
         private IRepositoryWrapper _repository;
