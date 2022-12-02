@@ -1,0 +1,7 @@
+<h1 *ngIf="!authenticated">{{title}}</h1>
+<div *ngIf="authenticated" id="header-buttons">
+    <button type="button" mat-button (click)="toggle()" class="header-button">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <button mat-button [routerLink]=" ['./logout'] " class="header-button">Logout</button>
+</div>

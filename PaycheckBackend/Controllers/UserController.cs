@@ -183,7 +183,7 @@ namespace PaycheckBackend.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody]UserDtoAuthenticate loginAttempt)
+        public IActionResult Login([FromBody]UserDtoAuthenticateLogin loginAttempt)
         {
             try
             {
@@ -275,7 +275,7 @@ namespace PaycheckBackend.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private User? Authenticate(User user, UserDtoAuthenticate login)
+        private User? Authenticate(User user, UserDtoAuthenticateLogin login)
         {
             if (user is not null && user.Password == login.Password)
             {

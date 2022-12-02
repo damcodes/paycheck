@@ -42,3 +42,50 @@ obj
 packages
 nlog.config
 internal_logs
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+paycheck-client/dist
+paycheck-client/tmp
+paycheck-client/out-tsc
+paycheck-client/bazel-out
+
+# Node
+paycheck-client/node_modules
+paycheck-client/npm-debug.log
+paycheck-client/yarn-error.log
+
+# IDEs and editors
+paycheck-client/.idea/
+paycheck-client/.project
+paycheck-client/.classpath
+paycheck-client/.c9/
+paycheck-client/*.launch
+paycheck-client/.settings/
+paycheck-client/*.sublime-workspace
+
+# Visual Studio Code
+paycheck-client/.vscode/*
+paycheck-client/!.vscode/settings.json
+paycheck-client/!.vscode/tasks.json
+paycheck-client/!.vscode/launch.json
+paycheck-client/!.vscode/extensions.json
+paycheck-client/.history/*
+
+# Miscellaneous
+paycheck-client/.angular/cache
+paycheck-client/.sass-cache/
+paycheck-client/connect.lock
+paycheck-client/coverage
+paycheck-client/libpeerconnection.log
+paycheck-client/testem.log
+paycheck-client/typings
+
+# System files
+paycheck-client/.DS_Store
+paycheck-client/Thumbs.db
+
+
+
+paycheck-client/README.md

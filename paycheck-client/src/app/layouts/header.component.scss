@@ -1,0 +1,11 @@
+div#header-buttons {
+    display: flex;
+    justify-content: space-between;
+    min-width: 100%;
+}
+h1, mat-icon, button.header-button {
+    color: #303030;
+}
+button:hover {
+    background-color: #f2eeee3f;
+}

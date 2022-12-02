@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@import '@angular/material/prebuilt-themes/purple-green.css';
+@import '@angular/material/theming';
+@include mat.core();
+
+html { 
+    // min-height: 100%; 
+    // display: flex;
+    // flex-direction: column;
+}
+body {
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+app-root {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+#main-content {
+    // flex-grow: 1;
+}
+#login {
+    justify-content: center;
+}
+mat-drawer-container {
+    flex-grow: 1;
+    width: 100%;
+}
