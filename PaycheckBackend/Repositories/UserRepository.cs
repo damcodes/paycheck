@@ -49,6 +49,15 @@ namespace PaycheckBackend.Repositories
                 .FirstOrDefault();
         }
 
+        public User? GetUserByIdAllDetails(int id)
+        {
+            return FindByCondition(u => u.UserId.Equals(id))
+                .Include(u => u.Workdays)
+                .Include(u => u.Jobs)
+                .Include(u => u.Paychecks)
+                .FirstOrDefault();
+        }
+
         public void CreateUser(User user)
         {
             Create(user);

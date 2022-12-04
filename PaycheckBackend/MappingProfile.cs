@@ -15,6 +15,7 @@ namespace PaycheckBackend
 			CreateMap<User, UserDtoWithPaychecks>();
 			CreateMap<User, UserDtoWithWorkdays>();
 			CreateMap<User, UserDtoWithToken>();
+			CreateMap<User, UserDtoAllDetails>();
 			CreateMap<UserDtoAuthenticateLogin, User>();
             CreateMap<UserDtoCreate, User>();
 			CreateMap<UserDtoPatch, User>();

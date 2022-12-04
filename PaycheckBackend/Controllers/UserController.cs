@@ -132,11 +132,11 @@ namespace PaycheckBackend.Controllers
 
                 if (user == null)
                 {
-                    _logger.LogError("UserController", "GetUserByIdWithWorkdays", $"User with {{id: {id}}} not found");
+                    _logger.LogError("UserController", "GetUserByIdWithWorkdays", $"User with {{ id: {id} }} not found");
                     return NotFound();
                 }
 
-                _logger.LogInfo("UserController", "GetUserByIdWithWorkdays", $"User with {{id: {id}}} found with {user.Workdays.Count()} workdays");
+                _logger.LogInfo("UserController", "GetUserByIdWithWorkdays", $"User with {{ id: {id} }} found with {user.Workdays.Count()} workdays");
                 var userResult = _mapper.Map<UserDtoWithWorkdays>(user);
                 return Ok(userResult);
             }
@@ -144,6 +144,30 @@ namespace PaycheckBackend.Controllers
             {
                 _logger.LogError("UserController", "GetUserByIdWithWorkdays", $"Error occured--Message: {ex.Message}");
                 return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("{id}/all")]
+        public IActionResult GetUserByIdAllDetails(int id)
+        {
+            try
+            {
+                var user = _repository.User.GetUserByIdAllDetails(id);
+
+                if (user is null)
+                {
+                    _logger.LogError("UsersController", "GetUserByIdAllDetails", $"User with {{ id: {id} }}  not found");
+                    return NotFound();
+                }
+
+                _logger.LogInfo("UsersController", "GetUserByIdAllDetails", $"User with {{ id: {id} }} found with {user.Jobs.Count()} jobs, {user.Workdays.Count()} workdays, and {user.Paychecks.Count()} paychecks");
+                var userResult = _mapper.Map<UserDtoAllDetails>(user);
+                return Ok(userResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UsersController", "GetUserByIdAllDetails", $"Error occurred--Message: {ex.Message}");
+                return StatusCode(500, "Internal server Error");
             }
         }
 
